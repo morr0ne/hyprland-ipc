@@ -1,9 +1,9 @@
-use std::{fmt::Display, num::NonZeroU32};
+use std::fmt::Display;
 
 pub enum Window {
     ClassRegex(String),
     TitleRegex(String),
-    Pid(NonZeroU32),
+    Pid(i32),
     Address(String),
     Floating,
     Tiled,
