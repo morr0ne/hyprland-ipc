@@ -13,7 +13,7 @@ pub struct Dispatcher {
 }
 
 impl Dispatcher {
-    pub async fn new() -> Result<Self, Error> {
+    pub fn new() -> Result<Self, Error> {
         let his = std::env::var("HYPRLAND_INSTANCE_SIGNATURE")
             .map_err(|_err| Error::NoInstanceSignature)?;
 
@@ -22,7 +22,7 @@ impl Dispatcher {
         })
     }
 
-    async fn call_command(&mut self, command: &str) -> Result<String, Error> {
+    async fn call_command(&self, command: &str) -> Result<String, Error> {
         let mut socket = UnixStream::connect(&self.socket_path).await?;
 
         socket.write_all(command.as_bytes()).await?;
@@ -38,13 +38,13 @@ impl Dispatcher {
         }
     }
 
-    pub async fn clients(&mut self) -> Result<Vec<Client>, Error> {
+    pub async fn clients(&self) -> Result<Vec<Client>, Error> {
         let response = self.call_command("j/clients").await?;
 
         serde_json::from_str(&response).map_err(|_err| Error::MalformedInput) // TODO: handle the serde error properly
     }
 
-    pub async fn toggle_floating(&mut self, window: Option<Window>) -> Result<String, Error> {
+    pub async fn toggle_floating(&self, window: Option<Window>) -> Result<String, Error> {
         if let Some(window) = window {
             self.call_command(&format!("/dispatch togglefloating {window}"))
                 .await
@@ -53,7 +53,7 @@ impl Dispatcher {
         }
     }
 
-    pub async fn pin(&mut self, window: Option<Window>) -> Result<String, Error> {
+    pub async fn pin(&self, window: Option<Window>) -> Result<String, Error> {
         if let Some(window) = window {
             self.call_command(&format!("/dispatch pin {window}")).await
         } else {
