@@ -6,7 +6,7 @@ use tokio::{
     net::UnixStream,
 };
 
-use crate::Error;
+use crate::{params::Window, Error};
 
 pub struct Dispatcher {
     socket_path: String,
@@ -44,8 +44,12 @@ impl Dispatcher {
         todo!()
     }
 
-    pub async fn pin(&mut self) -> Result<String, Error> {
-        self.call_command("/dispatch pin").await
+    pub async fn pin(&mut self, window: Option<Window>) -> Result<String, Error> {
+        if let Some(window) = window {
+            self.call_command(&format!("/dispatch pin {window}")).await
+        } else {
+            self.call_command("/dispatch pin").await
+        }
     }
 }
 
