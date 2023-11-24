@@ -1,6 +1,6 @@
 use std::num::NonZeroI32;
 
-use serde::{Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::UnixStream,
@@ -38,10 +38,20 @@ impl Dispatcher {
         }
     }
 
-    pub async fn clients(&self) -> Result<Vec<Client>, Error> {
-        let response = self.call_command("j/clients").await?;
+    async fn call_command_json<T: DeserializeOwned>(&self, command: &str) -> Result<T, Error> {
+        let mut socket = UnixStream::connect(&self.socket_path).await?;
 
-        serde_json::from_str(&response).map_err(|_err| Error::MalformedInput) // TODO: handle the serde error properly
+        socket.write_all(command.as_bytes()).await?;
+
+        let mut response = String::new();
+
+        socket.read_to_string(&mut response).await?;
+
+        serde_json::from_str(&response).map_err(|_err| Error::MalformedInput)
+    }
+
+    pub async fn clients(&self) -> Result<Vec<Client>, Error> {
+        self.call_command_json("j/clients").await
     }
 
     pub async fn toggle_floating(&self, window: Option<Window>) -> Result<String, Error> {
@@ -78,7 +88,7 @@ pub struct Client {
     pub initial_class: String,
     #[serde(rename = "initialTitle")]
     pub initial_title: String,
-    pub pid: NonZeroI32,
+    pub pid: i32,
     pub xwayland: bool,
     pub pinned: bool,
     pub fullscreen: bool,
