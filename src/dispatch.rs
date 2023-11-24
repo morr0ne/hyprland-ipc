@@ -1,3 +1,5 @@
+use std::num::NonZeroI32;
+
 use serde::{Deserialize, Serialize};
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
@@ -63,7 +65,7 @@ pub struct Client {
     pub initial_class: String,
     #[serde(rename = "initialTitle")]
     pub initial_title: String,
-    pub pid: i64,
+    pub pid: NonZeroI32,
     pub xwayland: bool,
     pub pinned: bool,
     pub fullscreen: bool,
