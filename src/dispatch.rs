@@ -44,8 +44,13 @@ impl Dispatcher {
         serde_json::from_str(&response).map_err(|_err| Error::MalformedInput) // TODO: handle the serde error properly
     }
 
-    pub async fn toggle_floating(&mut self) -> Result<(), Error> {
-        todo!()
+    pub async fn toggle_floating(&mut self, window: Option<Window>) -> Result<String, Error> {
+        if let Some(window) = window {
+            self.call_command(&format!("/dispatch togglefloating {window}"))
+                .await
+        } else {
+            self.call_command("/dispatch togglefloating").await
+        }
     }
 
     pub async fn pin(&mut self, window: Option<Window>) -> Result<String, Error> {
