@@ -31,7 +31,11 @@ impl Dispatcher {
 
         socket.read_to_string(&mut response).await?;
 
-        Ok(response)
+        if response == "ok" {
+            Ok(response)
+        } else {
+            Err(Error::NotOkResponse(response))
+        }
     }
 
     pub async fn clients(&mut self) -> Result<Vec<Client>, Error> {
