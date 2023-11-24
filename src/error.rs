@@ -4,6 +4,8 @@ use tokio_util::codec::LinesCodecError;
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("")]
+    NotOkResponse(String),
+    #[error("")]
     MalformedInput,
     #[error("HYPRLAND_INSTANCE_SIGNATURE was not found. Are you sure Hyprland is running?")]
     NoInstanceSignature,
