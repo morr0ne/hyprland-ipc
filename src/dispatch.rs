@@ -70,6 +70,15 @@ impl Dispatcher {
             self.call_command("/dispatch pin").await
         }
     }
+
+    pub async fn moveoutofgroup(&self, window: Option<Window>) -> Result<String, Error> {
+        if let Some(window) = window {
+            self.call_command(&format!("/dispatch moveoutofgroup {window}"))
+                .await
+        } else {
+            self.call_command("/dispatch moveoutofgroup").await
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
