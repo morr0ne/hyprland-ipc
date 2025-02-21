@@ -2,13 +2,13 @@
 name = "hyprland-ipc"
 version = "0.0.5"
 edition = "2021"
-license = "MIT OR Apache-2.0"
-authors = ["Federico Maria Morrone <contact@morrone.dev>"]
+license = "Apache-2.0"
+authors = ["Matilde Morrone <contact@morrone.dev>"]
 description = "Hyprland ipc access"
 readme = "README.md"
 documentation = "https://docs.rs/hyprland-ipc"
 repository = "https://github.com/morr0ne/hyprland-ipc"
-include = ["src/**/*.rs", "README.md", "LICENSE-APACHE", "LICENSE-MIT"]
+include = ["src/**/*.rs", "README.md", "LICENSE"]
 
 [dependencies]
 futures-core = "0.3.30"
